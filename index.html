@@ -38,8 +38,13 @@
 
     <script>
         const notes = {'a':261.63, 'w':277.18, 's':293.66, 'e':311.13, 'd':329.63, 'f':349.23, 't':369.99, 'g':392.00, 'y':415.30, 'h':440.00, 'u':466.16, 'j':493.88, 'k':523.25};
-        let audioCtx, masterGain, bellows = 0, lastAngle = 0;
+        let audioCtx, masterGain, bellows = 0.6, lastAngle = 0;
         let activeOscs = {};
+        document.addEventListener("mousemove", (e) => {
+            if (e.movementY < -2) {  
+                 bellows = Math.min(1, bellows + 0.08);
+             }
+        });
 
         // Automatic initialization on first interaction
         const initAudio = () => {
@@ -58,7 +63,7 @@
         const socket = new WebSocket('ws://localhost:8765');
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            const angle = data.angle;
+            console.log("Angle:", data.angle);
             document.getElementById('angle-display').innerText = `Lid Angle: ${angle.toFixed(1)}°`;
             
             if (lastAngle !== 0) {
